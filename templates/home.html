@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HCN-Bot</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        body {
+            background-color: #F2EFEA;
+            width: 100%;
+            font-family: "Montserrat";
+        }
+        h1 {
+            color: #FFFFFF;
+            font-family: "Cabin";
+            font-size: 40px;
+            font-weight: lighter;
+            margin: 0;
+        }
+        .title-bar {
+            background-color: #8ca0cf;
+            width: 100%;
+            padding: 25px 0;
+        }
+        h3 {
+            color: #030027;
+            font-family: "Montserrat";
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        #chatbox {
+            margin-top: 30px;
+            width: 100%;
+            padding: 15px 0 15px;
+        }
+        #userInput {
+            text-align: center;
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+        }
+        #userInput input[type=text] {
+            padding: 8px;
+            border: none;
+            width: 80%;
+            height: 25px;
+            margin: 25px 0px;
+            font-size: 14px;
+            font-family: "Montserrat";
+            display: inline-block;
+        }
+        #textInput {
+            width: 90%;
+            border: none;
+            border-bottom: 3px solid black;
+            font-family: monospace;
+            font-size: 17px;
+        }
+        .userText {
+            text-align: right;
+            line-height: 30px;
+            margin-top: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            word-wrap: break-word;
+        }
+        .userText span {
+            background-color: rgb(171, 227, 158);
+            padding: 10px;
+            border-radius: 2px;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+        }
+        .botText {
+            text-align: left;
+            line-height: 30px;
+            margin-top: 10x;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .botText span {
+            background-color: white;
+            padding: 10px;
+            border-radius: 2px;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+        }
+        #tidbit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+        }
+        .boxed {
+            margin-left: auto;
+            margin-right: auto;
+            width: 70%;
+            margin-top: 50px;
+            background-color: #A4B4D9;
+            padding: 0 10px;
+            height: 420px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        /* .boxed::-webkit-scrollbar {
+            display: none;
+        }
+        .boxed {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="title-bar">
+        <center>
+            <h1>HCN-Bot</h1>
+        </center>
+    </div>
+
+    <div class="boxed" id="content-wrapper">
+        <div id="chatbox">
+            <p class="botText">
+                <span>Halo! Ada yang bisa dibantu? :)</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="userInput">
+        <input id="textInput" type="text" name="msg" placeholder="Message" />
+    </div>
+
+    <script>
+        function getBotResponse() {
+            var rawText = $("#textInput").val();
+            var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+            $("#textInput").val("");
+            $("#chatbox").append(userHtml);
+            var elmnt = document.getElementById("userInput");
+            elmnt.scrollIntoView();
+            document
+                .getElementById("userInput")
+                .scrollIntoView({ block: "start", behavior: "smooth" });
+            $.get("/get", { msg: rawText }).done(function(data) {
+                var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+                $("#chatbox").append(botHtml);
+                var elmnt = document.getElementById("userInput");
+                elmnt.scrollIntoView();
+                document
+                    .getElementById("userInput")
+                    .scrollIntoView({ block: "start", behavior: "smooth" });
+            });
+        }
+        $("#textInput").keypress(function(e) {
+            if (e.which == 13) {
+                getBotResponse();
+            }
+        });
+    </script>
+</body>
+</html>
